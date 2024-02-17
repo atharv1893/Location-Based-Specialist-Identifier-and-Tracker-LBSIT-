@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loc_style.css') }}">
+    <script src="{{ url_for('static', filename='loc_script.js') }}"></script>
+</head>
+<body>
+
+            
+    <div class="user-name">
+        {% if latest_firstname %}
+        <p> Hello {{ latest_firstname }}</p>
+    {% else %}
+        <p>No firstname found</p>
+    {% endif %} 
+    </div>
+    <button>Find Your Location</button>
+    <video autoplay muted loop id="myVideo">
+        
+        
+        <source src="{{ url_for('static', filename='above_button.mp4') }}" type="video/mp4">
+        
+    </video>
+   
+   
+    <div id = "location_person" class="location-person">
+        <a href = "login">
+            <img src="{{ url_for('static', filename='location_mobile.png') }}">
+        </a>
+    </div>
+     <div id = "login_back" class="login_back"></div>
+
+
+    <div id = "next" class="next" >
+        <a href = "search">
+            <img src="{{ url_for('static', filename='next.png') }}">
+        </a>
+    </div>
+
+    <div id = "next_button" class="next_button"></div>
+
+</body>
+</html>
