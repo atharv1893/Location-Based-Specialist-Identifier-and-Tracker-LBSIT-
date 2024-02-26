@@ -1,6 +1,5 @@
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYXRoYXJ2LTE4OTMiLCJhIjoiY2xzeGVvbWgyMDJteTJsb2ViYmtzczA1byJ9.okf9PW2ORwBUQCJtC6EW7A';
-const APIKEY = "K2uhMneJS78v6v29URO_WNW6ktUisDimbYmyKDNxg6Q";
+mapboxgl.accessToken = <MAPBOX API>;
 var map;
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -10,7 +9,7 @@ if (navigator.geolocation) {
     
         map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/atharv-1893/clt31ff9e00mq01qzf21j3vc3',
+            style: 'mapbox://styles/<style name>',
             center: [longitude, latitude],
             zoom: 16,
             pitch:60,
