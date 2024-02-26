@@ -19,7 +19,6 @@ if (navigator.geolocation) {
         new mapboxgl.Marker({ color: '#a30c0c' })
       .setLngLat([longitude, latitude])
       .addTo(map);
-
       document.getElementById('centerButton').addEventListener('click', function() {
     
     map.flyTo({
