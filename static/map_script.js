@@ -1,7 +1,6 @@
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYXRoYXJ2LTE4OTMiLCJhIjoiY2xzeGVvbWgyMDJteTJsb2ViYmtzczA1byJ9.okf9PW2ORwBUQCJtC6EW7A';
 const APIKEY = "K2uhMneJS78v6v29URO_WNW6ktUisDimbYmyKDNxg6Q";
-var map;
+var map
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
         var latitude = position.coords.latitude;
@@ -26,7 +25,6 @@ if (navigator.geolocation) {
         pitch: 60
     });
 }); 
-      
     }, function (error) {
         switch (error.code) {
             case error.PERMISSION_DENIED:
