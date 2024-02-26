@@ -10,7 +10,7 @@ if (navigator.geolocation) {
     
         map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/satellite-streets-v11',
+            style: 'mapbox://styles/atharv-1893/clt31ff9e00mq01qzf21j3vc3',
             center: [longitude, latitude],
             zoom: 16,
             pitch:60,
@@ -48,30 +48,21 @@ if (navigator.geolocation) {
 } else {
     alert("Geolocation is not supported by this browser.");
 }
-function removeMarkers() {
-    var markers = document.querySelectorAll('.marker');
-    markers.forEach(marker => marker.remove());
-}
+
 
 // Function to remove existing popups from the map
 function removePopups() {
     var popups = document.querySelectorAll('.mapboxgl-popup');
     popups.forEach(popup => popup.remove());
-}
-function convertToGeoJSON(locations) {
-    const uniquelocations = {};
-
+}function convertToGeoJSON(locations) {
+    const uniqueLocations = {};
+    
     locations.forEach(location => {
-
-        const firstFiveLetters = location.title.substring(0, 5);
-
-
-        if (!uniquelocations[firstFiveLetters]) {
-            uniquelocations[firstFiveLetters] = location;
-        }
+        const key = `${location.title}_${location.position.lng}_${location.position.lat}`;
+        uniqueLocations[key] = location;
     });
-    console.log(uniquelocations)
-    const uniqueFeatures = Object.values(uniquelocations).map(location => ({
+
+    const uniqueFeatures = Object.values(uniqueLocations).map(location => ({
         type: 'Feature',
         geometry: {
             type: 'Point',
@@ -89,6 +80,7 @@ function convertToGeoJSON(locations) {
     };
 }
 
+
 function searchLocations() {
         var profession = document.getElementById('profession').value;
         if (profession.trim() === "") {
@@ -100,7 +92,6 @@ function searchLocations() {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
             console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-            removeMarkers();
             removePopups(); 
             findNearbyLocation(profession, position);
         }, function (error) {
@@ -127,140 +118,114 @@ function searchLocations() {
    
   }
 
-function findNearbyLocation(profession,position) {
-    var index = 0;
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
+  let currentMarkers = []; // Array to store current markers
 
-    // Define the search parameters
-    const params = {
-        q: profession, // Change the query to search for locations
-        at: `${latitude},${longitude}`,
-        radius: 1000
-    };
-
-    // Execute the search request
-    fetch(`https://discover.search.hereapi.com/v1/discover?apikey=${APIKEY}&${new URLSearchParams(params)}`)
-        .then(response => response.json())
-        .then(data => {
-            const locations = data.items;
-
-            const geojsonData = convertToGeoJSON(locations);
-
-            // Add GeoJSON data to the map
-            map.on('load', function () {
-                map.addSource('locations', {
-                    type: 'geojson',
-                    data: geojsonData
-                });
-                map.addLayer({
-                    id: 'text-layer',
-                    type: 'symbol',
-                    source: {
-                        type: 'geojson',
-                        data: {
-                            type: 'FeatureCollection',
-                            features: [{
-                                type: 'Feature',
-                                geometry: {
-                                    type: 'Point',
-                                    coordinates: [longitude, latitude] // Example coordinates
-                                },
-                                properties: {
-                                    title: location.address.label
-                                }
-                            }]
-                        }
-                    },
-                    layout: {
-                        'text-field': ['get', 'title'],
-                        'text-size': 24,
-                        'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-                        'text-radial-offset': 0.5,
-                        'text-justify': 'auto'
-                    },
-                    paint: {
-                        'text-color': '#FFFFFF'
-                    }
-                });
-            });
-             
-            // Add markers for each location
-            locations.forEach(location => {
-              var el = document.createElement('div');
-                    el.className = 'marker';
-                    el.textContent = index + 1;
-                    const markerId = `marker-${index}`; 
-                    new mapboxgl.Marker({color: "#007afc"})
-                        .setLngLat([location.position.lng, location.position.lat])
-                        .addTo(map)
-                        .setPopup(new mapboxgl.Popup({ offset: [0, -15] })
-                         .setHTML(`<h3>${location.title}</h3><p>${location.address.label}</p>`)
-                        
-                            );  
-                            displayHospitals(locations); 
-        })
-        .catch(error => {
-            console.error("Error: ", error);
-        });
-     
-        const listItem = document.getElementById(`hospital-${index + 1}`);
-        listItem.dataset.markerId = markerId;
-        listItem.addEventListener('click', function() {
-            const lngLat = marker.getAttribute('data-lng-lat').split(',').map(parseFloat);
-        // Center the map to the initial coordinates
-        map.flyTo({
-            center: lngLat,
-            zoom: 16,
-            pitch: 60
-        });
+  function findNearbyLocation(profession, position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+  
+      // Remove previous markers
+      if (currentMarkers !== null) {
+          for (let i = currentMarkers.length - 1; i >= 0; i--) {
+              currentMarkers[i].remove();
+          }
+          currentMarkers = []; // Clear the array
+      }
+      map.flyTo({
+        center: [longitude, latitude],
+        zoom: 16,
+        pitch: 60
     });
-}); 
-} function displayHospitals(locations) {
-    var uniqueLocations = {};
-
-    locations.forEach(location => {
-        const firstFiveLetters = location.title.substring(0, 5);
-        if (!uniqueLocations[firstFiveLetters]) {
-            uniqueLocations[firstFiveLetters] = location;
+      // Define the search parameters
+      const params = {
+          q: profession,
+          at: `${latitude},${longitude}`,
+          radius: 1000
+      };
+  
+      // Execute the search request
+      fetch(`https://discover.search.hereapi.com/v1/discover?apikey=${APIKEY}&${new URLSearchParams(params)}`)
+          .then(response => response.json())
+          .then(data => {
+              const locations = data.items;
+              const geojsonData = convertToGeoJSON(locations);
+  
+              // Add GeoJSON data to the map
+              map.on('load', function () {
+                  map.addSource('locations', {
+                      type: 'geojson',
+                      data: geojsonData
+                  });
+              });
+  
+              // Add markers for each location
+              locations.forEach((location, index) => {
+                  var el = document.createElement('div');
+                  el.className = 'marker';
+                  el.textContent = index + 1;
+  
+                  const marker = new mapboxgl.Marker({color: "#007afc"})
+                      .setLngLat([location.position.lng, location.position.lat])
+                      .addTo(map)
+                      .setPopup(new mapboxgl.Popup({ offset: [0, -15] })
+                          .setHTML(`<h3>${location.title}</h3><p>${location.address.label}</p>`));
+  
+                  currentMarkers.push(marker); // Add marker to the array
+              });
+              
+              // Display hospitals list
+              displayHospitals(locations);
+          })
+          .catch(error => {
+              console.error("Error: ", error);
+          });
         }
-    });
-
-    // Convert unique locations to an array
-    const uniqueLocationsArray = Object.values(uniqueLocations);
-
-    var hospitalList = document.getElementById('hospital_list');
-    hospitalList.innerHTML = ''; 
-
-    uniqueLocationsArray.forEach((location, index) => {
-        var listItem = document.createElement('li');
-        var nameElement = document.createElement('span');
-        var addressElement = document.createElement('span');
-
-        nameElement.textContent = `${index + 1}. ${location.title}`;
-        nameElement.style.fontWeight = 'bold';
-        nameElement.style.color = 'black';
-
-        addressElement.textContent = location.address.label;
-        addressElement.style.color = 'gray';
-
-        listItem.appendChild(nameElement);
-        listItem.appendChild(document.createElement('br'));
-        listItem.appendChild(document.createElement('br'));
-        listItem.appendChild(addressElement);
-
-        listItem.addEventListener('click', function () {
-            // Fly to the corresponding marker when clicked
-            map.flyTo({
-                center: [location.position.lng, location.position.lat],
-                zoom: 18,
-                pitch: 60
+        function displayHospitals(locations) {
+            var uniqueLocations = {};
+        
+            locations.forEach(location => {
+                const key = `${location.title}_${location.position.lng}_${location.position.lat}`;
+                if (!uniqueLocations[key]) {
+                    uniqueLocations[key] = location;
+                }
             });
-        });
-
-        hospitalList.appendChild(listItem);
-    });
-}
+        
+            // Convert unique locations to an array
+            const uniqueLocationsArray = Object.values(uniqueLocations);
+        
+            var hospitalList = document.getElementById('hospital_list');
+            hospitalList.innerHTML = ''; 
+        
+            uniqueLocationsArray.forEach((location, index) => {
+                var listItem = document.createElement('li');
+                var nameElement = document.createElement('span');
+                var addressElement = document.createElement('span');
+        
+                nameElement.textContent = `${index + 1}. ${location.title}`;
+                nameElement.style.fontWeight = 'bold';
+                nameElement.style.color = 'black';
+        
+                addressElement.textContent = location.address.label;
+                addressElement.style.color = 'gray';
+        
+                listItem.appendChild(nameElement);
+                listItem.appendChild(document.createElement('br'));
+                listItem.appendChild(document.createElement('br'));
+                listItem.appendChild(addressElement);
+        
+                listItem.addEventListener('click', function () {
+                    // Fly to the corresponding marker when clicked
+                    map.flyTo({
+                        center: [location.position.lng, location.position.lat],
+                        zoom: 18,
+                        pitch: 60
+                    });
+                });
+        
+                hospitalList.appendChild(listItem);
+            });
+        }
+        
 
 
    // Array of professions
@@ -275,6 +240,8 @@ var specialistDegrees = [
 "Fire Brigade",
 "Police",
 "Traffic Police",
+"Gas Station",
+
 
 ];
 function handleSearch() {
