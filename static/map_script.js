@@ -47,11 +47,8 @@ if (navigator.geolocation) {
 }
 
 
-// Function to remove existing popups from the map
-function removePopups() {
-    var popups = document.querySelectorAll('.mapboxgl-popup');
-    popups.forEach(popup => popup.remove());
-}function convertToGeoJSON(locations) {
+
+function convertToGeoJSON(locations) {
     const uniqueLocations = {};
     
     locations.forEach(location => {
@@ -177,7 +174,7 @@ function searchLocations() {
               console.error("Error: ", error);
           });
         }
-        function displayHospitals(locations) {
+function displayHospitals(locations) {
             var uniqueLocations = {};
         
             locations.forEach(location => {
@@ -222,7 +219,68 @@ function searchLocations() {
                 hospitalList.appendChild(listItem);
             });
         }
-        
+
+function categoryLocations(category) {
+
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+    if (currentMarkers !== null) {
+        for (let i = currentMarkers.length - 1; i >= 0; i--) {
+            currentMarkers[i].remove();
+        }
+        currentMarkers = []; // Clear the array
+    }
+    map.flyTo({
+      center: [longitude, latitude],
+      zoom: 16,
+      pitch: 60
+  });
+    // Define the search parameters
+    const params = {
+        q: category,
+        at: `${latitude},${longitude}`,
+        radius: 1000
+    };
+
+    // Execute the search request
+    fetch(`https://discover.search.hereapi.com/v1/discover?apikey=${APIKEY}&${new URLSearchParams(params)}`)
+        .then(response => response.json())
+        .then(data => {
+            const locations = data.items;
+            const geojsonData = convertToGeoJSON(locations);
+
+            // Add GeoJSON data to the map
+            map.on('load', function () {
+                map.addSource('locations', {
+                    type: 'geojson',
+                    data: geojsonData
+                });
+            });
+
+            // Add markers for each location
+            locations.forEach((location, index) => {
+                var el = document.createElement('div');
+                el.className = 'marker';
+                el.textContent = index + 1;
+
+                const marker = new mapboxgl.Marker({color: "#007afc"})
+                    .setLngLat([location.position.lng, location.position.lat])
+                    .addTo(map)
+                    .setPopup(new mapboxgl.Popup({ offset: [0, -15] })
+                        .setHTML(`<h3>${location.title}</h3><p>${location.address.label}</p>`));
+
+                currentMarkers.push(marker); // Add marker to the array
+            });
+            
+            
+            displayHospitals(locations);
+        })
+        .catch(error => {
+            console.error("Error: ", error);
+        });
+        });
+    }
 
 
    // Array of professions

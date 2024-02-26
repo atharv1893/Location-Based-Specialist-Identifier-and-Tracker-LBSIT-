@@ -34,7 +34,7 @@
   }
   #profession{
     height:1cm;
-    width:10cm;
+    width:8cm;
     position: absolute;
     top:1cm;
     left:2cm;
@@ -43,15 +43,24 @@
     font-size: 0.45cm;
     border: none;
     z-index: 6;
+    padding-left: 1.25cm;
+  }
+  #place_input{
+    height:0.8cm;
+    width:0.8cm;
+    position: absolute;
+    left:2.25cm;
+    top:1.25cm;
+    z-index:7;
   }
   #loc-button{
     position: absolute;
     top:1cm;
-    height:1.4cm;
+    height:1.3cm;
     width:2.5cm;
     font-size: 0.45cm;
     padding:0.15cm;
-    left:13cm;
+    left:12cm;
     border-radius: 0.25cm;
     border: none;
   }
@@ -64,7 +73,7 @@ overflow-y: auto;
 background-color: #fff;
 border: 1px solid #ccc;
 border-radius: 4px;
-width:9cm;
+width:8cm;
 position: absolute;
 justify-content: center;
 top:2.2cm;
@@ -93,7 +102,7 @@ background-color: #f5f5f5;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width:9cm;
+  width:8cm;
   position: absolute;
   justify-content: center;
   top:2.2cm;
@@ -124,3 +133,69 @@ background-color: #f5f5f5;
   background-color: #f5f5f5;
   }
 
+#hospital_button{
+  height:1cm;
+  padding: 0.5cm;
+  width:3cm;
+  position: absolute;
+  top:1.2cm;
+  left:15.5cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  font-size: 0.4cm;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 0.5cm;
+  border: none;
+}
+
+#hospital_button img{
+  height:0.5cm;
+  width:0.5cm;
+  margin-right: 0.25cm;
+}
+#pump_button{
+  height:1cm;
+  padding: 0.5cm;
+  width:4cm;
+  position: absolute;
+  top:1.2cm;
+  left:18.8cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  font-size: 0.4cm;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 0.5cm;
+  border: none;
+}
+
+#pump_button img{
+  height:0.5cm;
+  width:0.5cm;
+  margin-right: 0.25cm;
+}
+#police_button{
+  height:1cm;
+  padding: 0.5cm;
+  width:4.5cm;
+  position: absolute;
+  top:1.2cm;
+  left:23.1cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  font-size: 0.4cm;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 0.5cm;
+  border: none;
+}
+
+#police_button img{
+  height:0.5cm;
+  width:0.5cm;
+  margin-right: 0.25cm;
+}

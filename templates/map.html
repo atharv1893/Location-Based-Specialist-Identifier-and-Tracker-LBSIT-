@@ -18,9 +18,25 @@
 <div id="map"></div>
 <div>
   <input type="text" id="profession" placeholder="Enter any Emergency Services" >
+  <img id="place_input" src= "{{url_for('static', filename= 'place.png')}}">
   <ul id="suggestion_list"></ul>
   <ul id = "hospital_list"></ul>
   <button id ="loc-button"onclick="searchLocations()">Search</button>
+</div>
+<div id="buttons">
+  <button id="hospital_button" onclick="categoryLocations('Hospital')">
+    <img src= "{{url_for('static', filename= 'pharmacy.png')}}">
+
+   <span>Hospital</span> 
+  </button>
+
+  <button id="pump_button"onclick="categoryLocations('Petrol Pump')">
+    <img src= "{{url_for('static', filename= 'petrol-pump.png')}}">
+    <span>Petrol Pump</span></button>
+    
+    <button id="police_button"onclick="categoryLocations('Police')">
+      <img src= "{{url_for('static', filename= 'police-hat.png')}}">
+      <span>Police Station</span></button>
 </div>
 <button id="centerButton">
   <img src = "{{ url_for('static', filename='target.png') }}">
