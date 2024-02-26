@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Helix: Doctor</title>
+    <!-- Include Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <!-- Include jQuery for easier DOM manipulation -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='map_style.css') }}">
+<script src="{{ url_for('static', filename='map_script.js') }}"></script> 
+</head>
+<body>
+<div id="map"></div>
+<div>
+  <input type="text" id="profession" placeholder="Enter any Emergency Services" >
+  <ul id="suggestion_list"></ul>
+  <ul id = "hospital_list"></ul>
+  <button id ="loc-button"onclick="searchLocations()">Search</button>
+</div>
+<button id="centerButton">
+  <img src = "{{ url_for('static', filename='target.png') }}">
+</button>
+</body>
+</html>

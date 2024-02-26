@@ -16,19 +16,19 @@ function onSuccess(position){
     button.innerText = "Detecting your location...";
     let {latitude, longitude} = position.coords; //getting latitude and longitude properties value from coords obj
     //sending get request to the api with passing latitude and longitude coordinates of the user position
-
+      console.log(latitude,longitude)
    //nerul- 19.042263, 73.014517
    //thane - 19.267924,72.967252
    //change below terms also
-    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${19.267924}+${72.967252}&key=fb87072a45394821904e16450b724c48`)
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=fb87072a45394821904e16450b724c48`)
     //parsing json data into javascript object and returning it and in another then function receiving the object that is sent by the api
     .then(response => response.json()).then(response =>{
+      console.log(response.results[0]);
         let allDetails = response.results[0].components; //passing components object to allDetails variable
-        console.table(allDetails);
         let {suburb,city, state} = allDetails; //getting country, postcode, country properties value from allDetails obj
      
 
-        button.innerText = `${suburb},  ${city}, ${state}`; //passing these value to the button innerText
+        button.innerText = `${suburb},  ${city}`; //passing these value to the button innerText
 
 
      //   let city = ' ';
@@ -51,7 +51,7 @@ console.log(latitude,longitude);
 $.ajax({
 type: 'POST',
 url: 'location_save.php',
-data: { city: city, suburb: suburb ,latitude:'19.267924' , longitude: '72.967252',email:email},
+data: { city: city, suburb: suburb ,latitude:latitude , longitude: longitude ,email:email},
 success: function(response) {
   console.log(response);
 },

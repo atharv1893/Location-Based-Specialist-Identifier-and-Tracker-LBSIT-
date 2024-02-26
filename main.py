@@ -101,13 +101,11 @@ def location():
 def alert():
     return render_template('popup.html')
 
-@app.route('/search')
+@app.route('/map')
 def cards():
     latest_login = collection_login.find_one({}, sort=[('_id', -1)])
     latest_email = latest_login.get('email') if latest_login else None
 
-    return render_template('search.html', email=latest_email)
-    
-
+    return render_template('map.html', email=latest_email)
 if __name__ == '__main__':
     app.run(debug=True)
