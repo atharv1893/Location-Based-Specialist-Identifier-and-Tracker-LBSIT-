@@ -20,7 +20,6 @@ if (navigator.geolocation) {
       .setLngLat([longitude, latitude])
       .addTo(map);
       document.getElementById('centerButton').addEventListener('click', function() {
-    
     map.flyTo({
         center: [longitude, latitude],
         zoom: 16,
