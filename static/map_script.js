@@ -86,7 +86,6 @@ function searchLocations() {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
             console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-            removePopups(); 
             findNearbyLocation(profession, position);
         }, function (error) {
             switch (error.code) {
@@ -294,8 +293,9 @@ var specialistDegrees = [
 "Garages",
 "Fire Brigade",
 "Police",
-"Traffic Police",
 "Gas Station",
+"ATM",
+"Clinic",
 
 
 ];
