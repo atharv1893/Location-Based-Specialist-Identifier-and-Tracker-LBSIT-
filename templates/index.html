@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;1,200&family=Jost:ital,wght@0,100;1,100&family=Varela&family=Yeseva+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poltawski+Nowy:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<script src="{{ url_for('static', filename='script.js') }}"></script> 
+
 <title>Elixr</title>
        
 
@@ -46,8 +46,25 @@
             </a>
         </div>
 
-       
-        
+        <button id="emergency_button">
+            <img src= "{{url_for('static', filename= 'emergency-call.png')}}">
+            <span>Emergency Numbers</span></button>
+        <div class="emergency_number" id="emergency">
+
+             <li>National Emergency Number - 112</li>
+             <li>Police - 100</li>
+             <li>Fire - 101</li> 
+             <li>Ambulance - 102</li>
+             <li>Disaster Management Services - 108</li>
+             <li>Women Helpline - 1091</li>
+             <li>Senior Citizen Helpline - 1091/ 1291</li>
+             <li>Road Accident Emergency Service - 1073</li>
+             <li>Railway Accident Emergency Service - 1072</li>
+             <li>LPG Leak Helpline - 1906</li>
+             <li>Cyber Police - 1930</li>
+
+          </div> 
+          <script src="{{ url_for('static', filename='script.js') }}"></script>  
     </body>
    
     </html>

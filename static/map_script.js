@@ -1,6 +1,7 @@
 mapboxgl.accessToken = "pk.eyJ1IjoiYXRoYXJ2LTE4OTMiLCJhIjoiY2xpZzNsNTZsMGJsNzNkbndobGh4NzNvaiJ9.zMgPbWtyz2qPVs6G4yMpRQ";
 const APIKEY = "K2uhMneJS78v6v29URO_WNW6ktUisDimbYmyKDNxg6Q";
 var map;
+var popup = false;
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
         var latitude = position.coords.latitude;
@@ -136,8 +137,8 @@ function searchLocations() {
           radius: 1000
       };
   
-      // Execute the search request
-      fetch(`https://discover.search.hereapi.com/v1/discover?apikey=${APIKEY}&${new URLSearchParams(params)}`)
+      const geocodingUrl = `https://discover.search.hereapi.com/v1/discover?apikey=${APIKEY}&${new URLSearchParams(params)}`
+      fetch(geocodingUrl)
           .then(response => response.json())
           .then(data => {
               const locations = data.items;
@@ -239,7 +240,8 @@ function categoryLocations(category) {
     const params = {
         q: category,
         at: `${latitude},${longitude}`,
-        radius: 1000
+        radius: 1000,
+        proximity:[longitude,latitude],
     };
 
     // Execute the search request
@@ -248,7 +250,7 @@ function categoryLocations(category) {
         .then(data => {
             const locations = data.items;
             const geojsonData = convertToGeoJSON(locations);
-
+            console.log(locations)
             // Add GeoJSON data to the map
             map.on('load', function () {
                 map.addSource('locations', {
@@ -267,7 +269,7 @@ function categoryLocations(category) {
                     .setLngLat([location.position.lng, location.position.lat])
                     .addTo(map)
                     .setPopup(new mapboxgl.Popup({ offset: [0, -15] })
-                        .setHTML(`<h3>${location.title}</h3><p>${location.address.label}</p>`));
+                        .setHTML(`<h3>${location.title}</h3><p>${location.address.label}</p><br><a href="https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${location.position.lat},${location.position.lng}" target="_blank"><button class = 'direction'>Show Direction</button></a>`));
 
                 currentMarkers.push(marker); // Add marker to the array
             });
@@ -288,7 +290,7 @@ const searchButton = document.getElementById('searchButton');
 const hospitalList = document.getElementById('hospital-list');
 
 var specialistDegrees = [
-  "Hospital",
+"Hospital",
 "Veterinary (VMD)",
 "Garages",
 "Fire Brigade",
@@ -296,6 +298,8 @@ var specialistDegrees = [
 "Gas Station",
 "ATM",
 "Clinic",
+"Towing Car",
+
 
 
 ];
@@ -334,4 +338,18 @@ searchBar1.addEventListener("input", handleSearch);
 if (target !== searchBar1 && target !== suggestion_list) {
 suggestion_list.innerHTML = "";
 }
+});
+
+var emergency = document.getElementById("emergency_button");
+var contacts = document.getElementById("emergency");
+
+emergency.addEventListener("click", function(){ 
+    if(popup != false){
+        contacts.style.display = "none";
+        popup = false; 
+    }
+    else{
+        contacts.style.display = "block";
+        popup = true;
+    }
 });

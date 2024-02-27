@@ -1,3 +1,5 @@
+var popup = false
+
 function precision() {
   var rule1 = document.getElementById("rule1");
   var precision = document.getElementById("precision");
@@ -51,4 +53,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Play the video
   video.play();
+});
+
+
+var emergency = document.getElementById("emergency_button");
+var contacts = document.getElementById("emergency");
+
+emergency.addEventListener("click", function(){ 
+    if(popup != false){
+        contacts.style.display = "none";
+        popup = false; 
+    }
+    else{
+        contacts.style.display = "block";
+        popup = true;
+    }
 });

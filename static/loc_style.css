@@ -8,7 +8,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #2e2f4a;
+    background-color: #171617;
   
     background-position: center;
     background-size: cover;
@@ -73,26 +73,23 @@
   .next{
       z-index:2;
       position: absolute;
-      top:13.632cm;
-      right:0;
-  
+      top:14cm;
+      right:1cm
   
   }
   .next img{
       height:6cm;
       width:15cm;
   }
-  #myVideo{
-      height:6cm;
+
+    #myVideo{
       position:absolute;
-      top:4.14cm;
-      right:5.3cm;
+      top:1.7cm;
+      left:6.3cm;
      object-fit: cover; 
-      width:30cm;
-  z-index:1 ; 
-     justify-content: center;
-     align-items: center;
-     text-align: center;
+      width:27cm;
+  z-index:1; 
+
   }
   .login_back {
         display: none;

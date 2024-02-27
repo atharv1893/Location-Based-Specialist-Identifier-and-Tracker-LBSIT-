@@ -268,3 +268,57 @@ border-width: 10px;
 border-style: solid;
 border-color:  transparent transparent #cccccc transparent;
 }
+#emergency_button{
+  height:1cm;
+  padding: 0.5cm;
+  width:5.6cm;
+  position: absolute;
+  top:1.2cm;
+  right:1.5cm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  font-size: 0.4cm;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 0.5cm;
+  border: none;
+  transition: 0.5s linear ;
+}
+
+#emergency_button img{
+  height:0.5cm;
+  width:0.5cm;
+  margin-right: 0.25cm;
+}
+#emergency_button:hover{
+
+  transform: scale(0.95);
+  cursor: pointer;
+}
+.emergency_number{
+  position:absolute;
+  top:2.5cm;
+  right:1.5cm;
+ height:5cm;
+ width:10cm;
+ overflow-y: auto; 
+ font-family: 'Poppins', sans-serif;
+ border-radius: 0.25cm;
+ background-color: whitesmoke;
+ display: none;
+ z-index: 2; 
+}
+
+.emergency_number::-webkit-scrollbar{
+ width: 0px;
+}
+.emergency_number li{
+  position: relative;
+  padding:0.45cm;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.463);
+  list-style: none;
+  top:0cm;
+  left:0cm;
+ 
+}

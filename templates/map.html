@@ -12,7 +12,7 @@
     <!-- Include jQuery for easier DOM manipulation -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='map_style.css') }}">
-<script src="{{ url_for('static', filename='map_script.js') }}"></script> 
+
 </head>
 <body>
 <div id="map"></div>
@@ -37,9 +37,30 @@
     <button id="police_button"onclick="categoryLocations('Police')">
       <img src= "{{url_for('static', filename= 'police-hat.png')}}">
       <span>Police Station</span></button>
+
+      <button id="emergency_button">
+        <img src= "{{url_for('static', filename= 'emergency-call.png')}}">
+        <span>Emergency Numbers</span></button>
+
 </div>
 <button id="centerButton">
   <img src = "{{ url_for('static', filename='target.png') }}">
 </button>
+<div class="emergency_number" id="emergency">
+  <ul>
+   <li>National Emergency Number - 112</li>
+   <li>Police - 100</li>
+   <li>Fire - 101</li> 
+   <li>Ambulance - 102</li>
+   <li>Disaster Management Services - 108</li>
+   <li>Women Helpline - 1091</li>
+   <li>Senior Citizen Helpline - 1091/ 1291</li>
+   <li>Road Accident Emergency Service - 1073</li>
+   <li>Railway Accident Emergency Service - 1072</li>
+   <li>LPG Leak Helpline - 1906</li>
+   <li>Cyber Police - 1930</li>
+  </ul>
+</div>
+<script src="{{ url_for('static', filename='map_script.js') }}"></script> 
 </body>
 </html>
