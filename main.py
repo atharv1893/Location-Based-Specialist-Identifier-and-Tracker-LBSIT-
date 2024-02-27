@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from pymongo import MongoClient
 import hashlib
 
 app = Flask(__name__, static_url_path='/static')
-
 # Connect to MongoDB
 client = MongoClient('mongodb+srv://atharvd1893:atharv@login.wlasiru.mongodb.net/')
 db = client['User_Data']  # Choose your database
@@ -53,30 +52,28 @@ def login():
 
         hashed_password = hashlib.sha1(password.encode()).hexdigest()
 
-        # Check if user exists in the database and password matches
-        #user = db.execute("SELECT * FROM Register WHERE email = %s AND password = %s", (email, hashed_password)).fetchone()
-        user = collection.find_one({'email': email, 'password': hashed_password})
+        # Check if user exists in the database
+        user = collection.find_one({'email': email})
 
         if user:
-            if request.method == 'POST':
-                email = request.form['email']
-                # Check if email already exists in the database
-                    # Insert data into MongoDB
-                user_data = {
-                        
-                    'email': email,
-                }
-
+            # Check if password matches
+            if user['password'] == hashed_password:
+                # Insert data into MongoDB
+                user_data = {'email': email}
                 collection_login.insert_one(user_data)
-
-            return redirect(url_for('location'))
+                return redirect(url_for('location'))  # Redirect to the 'location' route
+            else:
+                # Password is incorrect, send alert message to the user
+                flash('Incorrect password. Please try again.', 'error')
+                return render_template('login.html')
         else:
-            # User not found, redirect to register.html
-            return redirect(url_for('register'))
+            # User not found, send alert message to the user
+            return render_template('popup_login.html') 
     else:
         return render_template('login.html')
 
-@app.route('/register')
+
+@app.route('/register',methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         # Get form data
