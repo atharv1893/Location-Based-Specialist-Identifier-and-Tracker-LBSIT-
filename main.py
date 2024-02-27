@@ -25,7 +25,7 @@ def information():
         lastname = request.form['lastname']
         email = request.form['email']
         password = request.form['password']
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        hashed_password = hashlib.sha1(password.encode()).hexdigest()
         # Check if email already exists in the database
         if collection.find_one({'email': email}):
             return render_template('popup.html')  # Render a template with popup message
@@ -51,7 +51,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        hashed_password = hashlib.sha1(password.encode()).hexdigest()
 
         # Check if user exists in the database and password matches
         #user = db.execute("SELECT * FROM Register WHERE email = %s AND password = %s", (email, hashed_password)).fetchone()
@@ -78,7 +78,30 @@ def login():
 
 @app.route('/register')
 def register():
-    return render_template('register.html')
+    if request.method == 'POST':
+        # Get form data
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        email = request.form['email']
+        password = request.form['password']
+        hashed_password = hashlib.sha1(password.encode()).hexdigest()
+        # Check if email already exists in the database
+        if collection.find_one({'email': email}):
+            return render_template('popup.html')  # Render a template with popup message
+        else:
+            # Insert data into MongoDB
+            user_data = {
+                'firstname': firstname,
+                'lastname': lastname,
+                'email': email,
+                'password': hashed_password,
+                'code': 0
+            }
+
+            collection.insert_one(user_data)
+            return redirect(url_for('login'))  # Redirect to login page after successful registration
+    else:
+        return render_template('register.html')
 
 collection = db['Register']
 collection_login = db['Login']
