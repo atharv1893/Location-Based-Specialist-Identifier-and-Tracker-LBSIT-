@@ -1,5 +1,5 @@
-mapboxgl.accessToken = "pk.eyJ1IjoiYXRoYXJ2LTE4OTMiLCJhIjoiY2xpZzNsNTZsMGJsNzNkbndobGh4NzNvaiJ9.zMgPbWtyz2qPVs6G4yMpRQ";
-const APIKEY = "K2uhMneJS78v6v29URO_WNW6ktUisDimbYmyKDNxg6Q";
+mapboxgl.accessToken = "<MAPBOX API>";
+const APIKEY = "<HERE API>";
 var map;
 var popup = false;
 if (navigator.geolocation) {
