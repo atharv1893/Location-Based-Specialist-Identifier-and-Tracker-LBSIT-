@@ -5,4 +5,7 @@ With a user-friendly interface and real-time GPS tracking, Emergency Connect swi
 
 Our extensive database ensures access to verified professionals, guaranteeing quality service when you need it most. Whether it's a medical emergency, automotive breakdown, or civil issue, rely on Emergency Connect to swiftly connect you with the right specialist, ensuring peace of mind in critical situations. 
 
+API Requirement: 
+1) HERE API: https://developer.here.com/
+2) MapBox GL JS API: https://www.mapbox.com/
 Domain: Health
