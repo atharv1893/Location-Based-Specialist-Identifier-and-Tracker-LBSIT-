@@ -4,7 +4,7 @@ import hashlib
 
 app = Flask(__name__, static_url_path='/static')
 # Connect to MongoDB
-client = MongoClient('mongodb+srv://atharvd1893:atharv@login.wlasiru.mongodb.net/')
+client = MongoClient('<MONGO DB CONNECTION STRING>')
 db = client['User_Data']  # Choose your database
 collection = db['Register']
 
