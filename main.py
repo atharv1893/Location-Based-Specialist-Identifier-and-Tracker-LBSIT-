@@ -64,8 +64,7 @@ def login():
                 return redirect(url_for('location'))  # Redirect to the 'location' route
             else:
                 # Password is incorrect, send alert message to the user
-                flash('Incorrect password. Please try again.', 'error')
-                return render_template('login.html')
+                return render_template('login.html', error=True)
         else:
             # User not found, send alert message to the user
             return render_template('popup_login.html') 
