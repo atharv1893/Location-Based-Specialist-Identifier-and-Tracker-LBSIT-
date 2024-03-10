@@ -11,40 +11,40 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
     <!-- Include jQuery for easier DOM manipulation -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='map_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/map_style.css') }}">
 
 </head>
 <body>
 <div id="map"></div>
 <div>
   <input type="text" id="profession" placeholder="Enter any Emergency Services" >
-  <img id="place_input" src= "{{url_for('static', filename= 'place.png')}}">
+  <img id="place_input" src= "{{url_for('static', filename= 'image/place.png')}}">
   <ul id="suggestion_list"></ul>
   <ul id = "hospital_list"></ul>
   <button id ="loc-button"onclick="searchLocations()">Search</button>
 </div>
 <div id="buttons">
   <button id="hospital_button" onclick="categoryLocations('Hospital')">
-    <img src= "{{url_for('static', filename= 'pharmacy.png')}}">
+    <img src= "{{url_for('static', filename= 'image/pharmacy.png')}}">
 
    <span>Hospital</span> 
   </button>
 
   <button id="pump_button"onclick="categoryLocations('Petrol Pump')">
-    <img src= "{{url_for('static', filename= 'petrol-pump.png')}}">
+    <img src= "{{url_for('static', filename= 'image/petrol-pump.png')}}">
     <span>Petrol Pump</span></button>
     
     <button id="police_button"onclick="categoryLocations('Police')">
-      <img src= "{{url_for('static', filename= 'police-hat.png')}}">
+      <img src= "{{url_for('static', filename= 'image/police-hat.png')}}">
       <span>Police Station</span></button>
 
       <button id="emergency_button">
-        <img src= "{{url_for('static', filename= 'emergency-call.png')}}">
+        <img src= "{{url_for('static', filename= 'image/emergency-call.png')}}">
         <span>Emergency Numbers</span></button>
 
 </div>
 <button id="centerButton">
-  <img src = "{{ url_for('static', filename='target.png') }}">
+  <img src = "{{ url_for('static', filename='image/target.png') }}">
 </button>
 <div class="emergency_number" id="emergency">
   <ul>
@@ -61,6 +61,6 @@
    <li>Cyber Police - 1930</li>
   </ul>
 </div>
-<script src="{{ url_for('static', filename='map_script.js') }}"></script> 
+<script src="{{ url_for('static', filename='script/map_script.js') }}"></script> 
 </body>
 </html>

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loc_style.css') }}">
-    <script src="{{ url_for('static', filename='loc_script.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/loc_style.css') }}">
+    <script src="{{ url_for('static', filename='script/loc_script.js') }}"></script>
 </head>
 <body>
 
@@ -21,14 +21,14 @@
     <video autoplay muted loop id="myVideo">
         
         
-        <source src="{{ url_for('static', filename='emergency_vehicles.mp4') }}" type="video/mp4">
+        <source src="{{ url_for('static', filename='video/emergency_vehicles.mp4') }}" type="video/mp4">
         
     </video>
    
    
     <div id = "location_person" class="location-person">
         <a href = "login">
-            <img src="{{ url_for('static', filename='location_mobile.png') }}">
+            <img src="{{ url_for('static', filename='image/location_mobile.png') }}">
         </a>
     </div>
      <div id = "login_back" class="login_back"></div>
@@ -36,7 +36,7 @@
 
     <div id = "next" class="next" >
         <a href = "map">
-            <img src="{{ url_for('static', filename='next.png') }}">
+            <img src="{{ url_for('static', filename='image/next.png') }}">
         </a>
     </div>
 

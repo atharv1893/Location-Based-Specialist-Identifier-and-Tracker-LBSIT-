@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='register_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/register_style.css') }}">
    
     <title>Elixr:Register</title>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
@@ -12,12 +12,12 @@
 <body>
 
         <div class="background">
-            <img src = "{{url_for('static', filename='graphs_bg.png') }}">
+            <img src = "{{url_for('static', filename='image/graphs_bg.png') }}">
         </div>
     <div class="overlay"></div>
     <div class="login-form">
         <div class="form-logo">
-            <img src = "{{url_for('static', filename='elixr_red_logo.png') }}">
+            <img src = "{{url_for('static', filename='image/elixr_red_logo.png') }}">
          </div>
         <h3>Welcome to Elixr</h3>
 
@@ -60,6 +60,6 @@
        <h5><a href = "contact.html">Contact us</a></h5>
        <h5><a href = "register.html">Sign In</a></h5>
       </div>
-    <script src="{{ url_for('static', filename='register_script.js') }}"></script>  
+    <script src="{{ url_for('static', filename='script/register_script.js') }}"></script>  
 </body>
 </html>

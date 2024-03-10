@@ -6,11 +6,10 @@
         <meta name = "viewport"content="width=device-width,initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" href="{{ url_for('static', filename='helix_black_logo.png') }}" type="image/png">
 
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;1,200&family=Jost:ital,wght@0,100;1,100&family=Varela&family=Yeseva+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poltawski+Nowy:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/style.css') }}">
 
 <title>Elixr</title>
        
@@ -19,7 +18,7 @@
     <body >
           
         <video autoplay muted id="myVideo">
-            <source src="{{ url_for('static', filename='start.mp4') }}" type="video/mp4">
+            <source src="{{ url_for('static', filename='video/start.mp4') }}" type="video/mp4">
           </video>
           
         <div class = "Elixr-word">
@@ -47,7 +46,7 @@
         </div>
 
         <button id="emergency_button">
-            <img src= "{{url_for('static', filename= 'emergency-call.png')}}">
+            <img src= "{{url_for('static', filename= 'image/emergency-call.png')}}">
             <span>Emergency Numbers</span></button>
         <div class="emergency_number" id="emergency">
 
@@ -64,7 +63,7 @@
              <li>Cyber Police - 1930</li>
 
           </div> 
-          <script src="{{ url_for('static', filename='script.js') }}"></script>  
+          <script src="{{ url_for('static', filename='script/script.js') }}"></script>  
     </body>
    
     </html>

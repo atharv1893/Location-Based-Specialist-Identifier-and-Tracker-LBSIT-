@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel = "stylesheet" href = "login.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login_style.css') }}">
-    <script src="{{ url_for('static', filename='login_script.js') }}"></script>  
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/login_style.css') }}">
+    <script src="{{ url_for('static', filename='script/login_script.js') }}"></script>  
     <title>Elixr: Login</title>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 </head>
 <body>
 
         <div class="background">
-            <img src = "{{url_for('static', filename='graphs_bg.png') }}">>
+            <img src = "{{url_for('static', filename='image/graphs_bg.png') }}">>
         </div>
     <div class="overlay"></div>
     <div class="register">
     <div class="login-form">
         <div class="form-logo">
-            <img src = "{{url_for('static', filename='elixr_red_logo.png') }}">
+            <img src = "{{url_for('static', filename='image/elixr_red_logo.png') }}">
          </div>
         <h3>Welcome to Elixr</h3>
 

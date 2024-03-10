@@ -359,7 +359,7 @@ font-weight: 600;
 
 .section4{
   height: 870vh;
-  background-image: url("graphs_bg.png");
+  background-image: url("/static/image/graphs_bg.png");
   background-size: cover; 
 } 
 .section4::before{

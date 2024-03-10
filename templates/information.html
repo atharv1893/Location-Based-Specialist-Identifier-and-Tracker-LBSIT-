@@ -11,8 +11,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Poltawski+Nowy&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@500&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='info_style.css') }}">
-        <script src="{{ url_for('static', filename='info_script.js') }}"></script> 
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/info_style.css') }}">
+        <script src="{{ url_for('static', filename='script/info_script.js') }}"></script> 
 <title>Elixr</title>
 
 
@@ -22,7 +22,7 @@
 
             <div class="logo">
                 <a href = "index">
-                    <img src="{{url_for('static', filename='elixr_black_logo.png') }}">
+                    <img src="{{url_for('static', filename='image/elixr_black_logo.png') }}">
                 </a>
             </div>
             
@@ -42,7 +42,7 @@
             
             
             <video autoplay muted loop id="myVideo">
-                <source src="{{url_for('static', filename='Info_Video.mp4') }}" onload="rotateWords()" type="video/mp4">
+                <source src="{{url_for('static', filename='video/Info_Video.mp4') }}" onload="rotateWords()" type="video/mp4">
             </video>
             
             <div id="rotating-text"></div>
@@ -56,13 +56,13 @@
    <div class="section2">
 
     <h1>Get your Location</h1>
-    <h3>Search for your Location through inbuilt location finder, or manually enter the location.</h3>
+    <h3>Search for your Location through inbuilt location finder.</h3>
 
 
     <div class="maps">
-        <img src = "{{url_for('static', filename='map1.png') }}"  id = "map1" >
-        <img src = "{{url_for('static', filename='map2.png') }}" id = "map2">
-        <img src = "{{url_for('static', filename='map3.png') }}" id = "map3">
+        <img src = "{{url_for('static', filename='image/map1.png') }}"  id = "map1" >
+        <img src = "{{url_for('static', filename='image/map2.png') }}" id = "map2">
+        <img src = "{{url_for('static', filename='image/map3.png') }}" id = "map3">
 
     <div class="search-bar">
         <h3><i class = "fas fa-search"></i></h3>
@@ -78,12 +78,12 @@
    <div class="section3">
 
    <p>Get all your nearby health workers</p>
-   <h3>After finding your user's location, check for all your nearby medical stores, dentists, NGO's, garages, civil servants </h3>
+   <h3>After finding your user's location, check for all your nearby medical stores, dentists, NGO's, garages, civil servants. </h3>
    
         <div class="workers-pic">
-            <img src = "{{url_for('static', filename='Fortis.jpg') }}" id = "worker1">
+            <img src = "{{url_for('static', filename='image/Fortis.jpg') }}" id = "worker1">
             <video autoplay muted loop id="worker2" >
-                <source src="{{url_for('static', filename='info_mechanic.mp4') }}" onload="rotateWords()" type="video/mp4">
+                <source src="{{url_for('static', filename='video/info_mechanic.mp4') }}" onload="rotateWords()" type="video/mp4">
             </video>
         </div>
 
@@ -93,7 +93,7 @@
 
        <div class="login-form">
             <div class="form-logo">
-                <img src = "{{url_for('static', filename='elixr_red_logo.png') }}">
+                <img src = "{{url_for('static', filename='image/elixr_red_logo.png') }}">
              </div>
             <h3>Welcome to Elixr</h3>
 
