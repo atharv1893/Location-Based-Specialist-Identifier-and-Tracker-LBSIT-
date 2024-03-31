@@ -10,13 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;1,200&family=Jost:ital,wght@0,100;1,100&family=Varela&family=Yeseva+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poltawski+Nowy:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/style.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='image/favicon.ico') }}"sizes="16x16 32x32">
 
 <title>Elixr</title>
        
 
     </head>
     <body >
-          
+         <img id="logo" src = "{{ url_for('static',filename='image/elixr_white_logo.png') }}"> 
         <video autoplay muted id="myVideo">
             <source src="{{ url_for('static', filename='video/start.mp4') }}" type="video/mp4">
           </video>

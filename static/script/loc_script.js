@@ -20,7 +20,7 @@ function onSuccess(position){
    //nerul- 19.042263, 73.014517
    //thane - 19.267924,72.967252
    //change below terms also
-    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=<OPENCAGE LOCATION API>`)
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=fb87072a45394821904e16450b724c48`)
     //parsing json data into javascript object and returning it and in another then function receiving the object that is sent by the api
     .then(response => response.json()).then(response =>{
       console.log(response.results[0]);

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Map Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    #hospital_list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 10cm;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width:8cm;
+  position: absolute;
+  justify-content: center;
+  top:2.2cm;
+  left:2.6cm;
+  z-index: 5;
+  font-family: 'Poppins', sans-serif;
+  transition: height 0.5s ease;
+  }
+  
+  #hospital_list li {
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.459);
+  }
+
+  #hospital_list::-webkit-scrollbar-thumb{
+    background-color: #636363;
+    border-radius: 10px;
+  }
+  #hospital_list li:hover {
+  background-color: #f5f5f5;
+  }
+  #anotherLocation{
+    position: absolute;
+    top:1cm;
+    left:1cm
+  }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<ul id = "hospital_list"></ul>
+<button id="anotherLocation" onclick="AskForLocation()">Search For Other Location</button>
+<script>
+mapboxgl.accessToken = "pk.eyJ1IjoiYXRoYXJ2LTE4OTMiLCJhIjoiY2xpZzNsNTZsMGJsNzNkbndobGh4NzNvaiJ9.zMgPbWtyz2qPVs6G4yMpRQ";
+const hereApiKey = "K2uhMneJS78v6v29URO_WNW6ktUisDimbYmyKDNxg6Q";
+var map;
+var center;
+currentMarkers = [];
+// Function to search for a place directly using Mapbox Geocoding API
+function searchPlace(placeName) {
+    const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(placeName)}.json?access_token=${mapboxgl.accessToken}`;
+
+    fetch(geocodingUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Check if any features are returned
+            if (data.features.length > 0) {
+              center = data.features[0].center;
+                map.flyTo({ center, zoom: 16,pitch:60 });
+                // Place name recognized, prompt for profession
+                const profession = prompt('Place recognized. Please enter a profession:');
+                // Proceed with searching for nearby locations based on the place name and profession
+                if (profession) {
+                    OtherLocation(data.features[0], profession);
+                }
+            } else {
+                alert('Place not recognized. Please enter a valid place name.');
+            }
+        })
+        .catch(error => {
+            console.error('Error searching for place:', error);
+        });
+}
+
+// Function to search for nearby locations based on the provided place name and profession
+function searchLocations(place, profession) {
+    console.log(place,profession)
+    const latitude = place.center[1];
+    const longitude = place.center[0];
+
+    // Add marker for searched location (red marker)
+    new mapboxgl.Marker({ color: '#FF0000' })
+        .setLngLat([longitude, latitude])
+        .addTo(map);
+
+    // Use latitude and longitude to perform the search for nearby locations with the specified profession
+    const url = `https://discover.search.hereapi.com/v1/discover?apikey=${hereApiKey}&at=${latitude},${longitude}&q=${encodeURIComponent(profession)}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Check if any locations are found
+            if (data.items.length > 0) {
+                // Add marker for profession location (blue marker)
+                console.log('Search results:', data);
+                const professionLatitude = data.items[0].position.lat;
+                const professionLongitude = data.items[0].position.lng;
+                new mapboxgl.Marker({ color: '#0000FF' })
+                    .setLngLat([professionLongitude, professionLatitude])
+                    .addTo(map);
+            } else {
+                console.log('No locations found for the specified profession.');
+            }
+        })
+        .catch(error => {
+            console.error('Error searching for locations:', error);
+        });
+}
+function convertToGeoJSON(locations) {
+    const uniqueLocations = {};
+    
+    locations.forEach(location => {
+        const key = `${location.title}_${location.position.lng}_${location.position.lat}`;
+        uniqueLocations[key] = location;
+    });
+
+    const uniqueFeatures = Object.values(uniqueLocations).map(location => ({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [location.position.lng, location.position.lat]
+        },
+        properties: {
+            name: location.title,
+            address: location.address.label
+        }
+    }));
+
+    return {
+        type: 'FeatureCollection',
+        features: uniqueFeatures
+    };
+}
+
+// Initialize map
+map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [0, 0], // Default center
+    zoom: 2 // Default zoom
+});
+function AskForLocation(){
+
+  // Example usage: Call searchPlace with the entered place name
+  const placeName = prompt('Please enter a place name:');
+  if (placeName) {
+    searchPlace(placeName);
+  }
+}
+function OtherLocation(place , profession) {
+  const latitude = place.center[1];
+    const longitude = place.center[0]; 
+    new mapboxgl.Marker({ color: '#FF0000' })
+        .setLngLat([longitude, latitude])
+        .addTo(map); 
+      // Remove previous markers
+      if (currentMarkers !== null) {
+          for (let i = currentMarkers.length - 1; i >= 0; i--) {
+              currentMarkers[i].remove();
+          }
+           // Clear the array
+      }
+      map.flyTo({
+        center: [longitude, latitude],
+        zoom: 16,
+        pitch: 60
+    });
+      // Define the search parameters
+      const params = {
+          q: profession,
+          at: `${latitude},${longitude}`,
+          radius: 1000
+      };
+  
+      const geocodingUrl = `https://discover.search.hereapi.com/v1/discover?apikey=${hereApiKey}&${new URLSearchParams(params)}`
+      fetch(geocodingUrl)
+          .then(response => response.json())
+          .then(data => {
+              const locations = data.items;
+              const geojsonData = convertToGeoJSON(locations);
+  
+              // Add GeoJSON data to the map
+              map.on('load', function () {
+                  map.addSource('locations', {
+                      type: 'geojson',
+                      data: geojsonData
+                  });
+              });
+  
+              // Add markers for each location
+              locations.forEach((location, index) => {
+                  var el = document.createElement('div');
+                  el.className = 'marker';
+                  el.textContent = index + 1;
+  
+                  const marker = new mapboxgl.Marker({color: "#007afc"})
+                      .setLngLat([location.position.lng, location.position.lat])
+                      .addTo(map)
+                      .setPopup(new mapboxgl.Popup({ offset: [0, -15] })
+                      .setHTML(`
+                      <h3>${location.title}</h3>
+                      <p>${location.address.label}</p>
+                      <br>
+                      <button class='directionButton' data-lng="${location.position.lng}" data-lat="${location.position.lat}" onclick="getDirections(${location.position.lat}, ${location.position.lng})">Show Direction</button>
+                  `));
+      
+  
+                  currentMarkers.push(marker); // Add marker to the array
+              });
+              
+              // Display hospitals list
+              displayLocations(locations);
+          })
+          .catch(error => {
+              console.error("Error: ", error);
+          });
+        }
+
+       
+function displayLocations(locations) {
+            var uniqueLocations = {};
+        
+            locations.forEach(location => {
+                const key = `${location.title}_${location.position.lng}_${location.position.lat}`;
+                if (!uniqueLocations[key]) {
+                    uniqueLocations[key] = location;
+                }
+            });
+        
+            // Convert unique locations to an array
+            const uniqueLocationsArray = Object.values(uniqueLocations);
+        
+            var hospitalList = document.getElementById('hospital_list');
+            hospitalList.style.display = 'block';
+            hospitalList.innerHTML = ''; 
+        
+            uniqueLocationsArray.forEach((location, index) => {
+                var listItem = document.createElement('li');
+                var nameElement = document.createElement('span');
+                var addressElement = document.createElement('span');
+        
+                nameElement.textContent = `${index + 1}. ${location.title}`;
+                nameElement.style.fontWeight = '500';
+                nameElement.style.color = 'black';
+                nameElement.style.fontSize = '0.4cm'
+                nameElement.style.fontFamily = "Roboto", 'sans-serif';
+
+        
+                addressElement.textContent = location.address.label;
+                addressElement.style.color = 'gray';
+                addressElement.style.fontSize = '0.35cm'
+                addressElement.style.fontFamily = "Roboto", 'sans-serif';
+        
+                listItem.appendChild(nameElement);
+                listItem.appendChild(document.createElement('br'));
+                listItem.appendChild(document.createElement('br'));
+                listItem.appendChild(addressElement);
+        
+                listItem.addEventListener('click', function () {
+                    // Fly to the corresponding marker when clicked
+                    map.flyTo({
+                        center: [location.position.lng, location.position.lat],
+                        zoom: 18,
+                        pitch: 60
+                    });
+                });
+        
+                hospitalList.appendChild(listItem);
+            });
+        }
+
+</script>
+
+</body>
+</html>

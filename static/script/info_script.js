@@ -1,27 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-//     var words = ['Hospital', 'Mechanic', 'Fire Brigade', 'Ambulance', 'Traffic Assistance'];
-// var currentIndex = 0;
-// var duration = 4000;
-// var rotatingText = document.getElementById('rotating-text');
-// function rotateWords() {
-//   rotatingText.style.opacity = 0; // Set opacity to 0 for fade-out effect
-//   setTimeout(function() {
-//     rotatingText.textContent = words[currentIndex];
-//     rotatingText.style.opacity = 1; // Set opacity to 1 for fade-in effect
-//     currentIndex = (currentIndex + 1) % words.length;
-//   }, 200); // Wait for 500 milliseconds before updating content and fading in
-
-//   setTimeout(rotateWords, duration);
-// }
-
-
-// rotateWords();
 
     document.querySelector('.circle').addEventListener('click', function() {
-      window.scrollBy(0, 750);  // Adjust the value (100) to control scrolling speed
+      window.scrollBy(0, 750);
     });
 
-   const locations = ["Thane", "Nerul", "Byculla","Dombivali"]; // Words to display
+   const locations = ["Thane", "Nerul", "Byculla","Dombivali"]; 
    let wordIndex = 0;
    let charIndex = 0;
    var typingEffect = document.getElementById("typing-effect");
@@ -65,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		email.addEventListener('input',()=>{
 			const emailBox = document.querySelector('.emailBox');
 			const emailText = document.querySelector('.emailText');
-			const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$/;
+			const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/;
 
 			if(email.value.match(emailPattern)){
 				emailBox.classList.add('valid');

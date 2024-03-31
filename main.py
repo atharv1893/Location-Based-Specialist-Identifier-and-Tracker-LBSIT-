@@ -4,7 +4,7 @@ import hashlib
 
 app = Flask(__name__, static_url_path='/static')
 # Connect to MongoDB
-client = MongoClient('<MONGODB CONNECTION STRING>')
+client = MongoClient('mongodb+srv://atharvd1893:atharv@login.wlasiru.mongodb.net/')
 db = client['User_Data']  # Choose your database
 collection = db['Register']
 
@@ -126,5 +126,15 @@ def cards():
     latest_email = latest_login.get('email') if latest_login else None
 
     return render_template('map.html', email=latest_email)
+
+@app.route('/check')
+def check():
+    return render_template('check.html')
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+

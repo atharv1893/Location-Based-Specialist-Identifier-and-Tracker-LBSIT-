@@ -5,7 +5,7 @@ const button = document.getElementById("submit");
 email.addEventListener('input',()=>{
     const emailBox = document.querySelector('.emailBox');
     const emailText = document.querySelector('.emailText');
-    const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$/;
+    const emailPattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/;
 
     if(email.value.match(emailPattern)){
         emailBox.classList.add('valid');
