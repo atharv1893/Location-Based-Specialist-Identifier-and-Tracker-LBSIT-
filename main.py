@@ -35,7 +35,6 @@ def information():
                 'lastname': lastname,
                 'email': email,
                 'password': hashed_password,
-                'code': 0
             }
 
             collection.insert_one(user_data)
@@ -91,7 +90,6 @@ def register():
                 'lastname': lastname,
                 'email': email,
                 'password': hashed_password,
-                'code': 0
             }
 
             collection.insert_one(user_data)

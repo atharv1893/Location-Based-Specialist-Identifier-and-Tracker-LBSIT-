@@ -4,6 +4,10 @@ var map;
 var center;
 var count=0
 var popup = false;
+var latitude;
+var longitude;
+let markersLoaded = false;
+var start = false;
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
         var latitude = position.coords.latitude;
@@ -20,7 +24,15 @@ if (navigator.geolocation) {
         map.addControl(new mapboxgl.NavigationControl());
         new mapboxgl.Marker({ color: '#a30c0c' })
       .setLngLat([longitude, latitude])
-      .addTo(map);
+      .addTo(map)
+      .setPopup(new mapboxgl.Popup({ offset: [0, -35] })
+                      .setHTML(`
+                      <b>You are Here</b>`
+                      ));
+
+
+
+
       document.getElementById('centerButton').addEventListener('click', function() {
     map.flyTo({
         center: [longitude, latitude],
@@ -239,6 +251,8 @@ function categoryLocations(category) {
     if (map.getSource('route')) {
         map.removeLayer('route');
         map.removeSource('route');
+        map.removeLayer('marker');
+        map.removeSource('marker');
     }
     hospital_list.style.display = 'none';   
      profession_value.value = category
@@ -300,12 +314,7 @@ function categoryLocations(category) {
                 currentMarkers.push(marker);
                 
             });
-            // document.querySelectorAll('.directionButton').forEach(button => {
-            //     button.addEventListener('click', function() {
-            //         const destinationLng = parseFloat(this.getAttribute('data-lng'));
-            //         const destinationLat = parseFloat(this.getAttribute('data-lat'));
-            //         getDirections(destinationLng, destinationLat);
-            //     }); 
+          
             
             displayLocations(locations);
         })
@@ -424,6 +433,7 @@ function addRoute(coords) {
         map.removeLayer('route');
         map.removeSource('route');
     }
+
     // Add a new layer to the map
     map.addLayer({
         id: 'route',
@@ -447,6 +457,96 @@ function addRoute(coords) {
         }
     });
 }
+
+
+// Function to update marker's position based on user's location
+let intervalId; // variable to hold the interval id
+
+// Function to start updating the marker
+function startUpdatingMarker(route) {
+    intervalId = setInterval(function() {
+        updateMarker(route); // Pass route as an argument to updateMarker
+    }, 1000); // update marker every 500 milliseconds
+}
+
+// Function to stop updating the marker
+function stopUpdatingMarker() {
+    clearInterval(intervalId);
+    if (map.hasImage('current-location-marker')) {
+            map.removeImage('current-location-marker');
+        }
+}
+
+// Function to update marker's position based on user's location
+function updateMarker(route) {
+    // Check if the map object exists
+    if (!map) {
+        console.error('Map object is not initialized.');
+        return;
+    }
+
+    // Load the marker image
+    map.loadImage('../static/image/current_location_2.png', function(error, image) {
+        if (error) {
+            console.error('Error loading marker image:', error);
+            return;
+        }
+       
+        // Remove the existing image if it already exists
+        if (map.hasImage('current-location-marker')) {
+            map.removeImage('current-location-marker');
+        }
+
+        // Add the loaded image to the map's style
+        map.addImage('current-location-marker', image);
+
+        // Get the user's current position
+        if (navigator.geolocation) {
+                lat = route.coordinates[0][0];
+                lng = route.coordinates[0][1]; 
+                var coords = {
+                    type: 'Point',
+                    coordinates: [lat,lng]
+                };
+
+                // Remove existing marker layer if it exists
+                if (map.getSource('change-marker')) {
+                    map.removeLayer('change-marker');
+                    map.removeSource('change-marker');
+                }
+                map.flyTo({
+                    zoom: 16,
+                    pitch: 0
+                });
+                // Add new marker layer using the updated coordinates
+                map.addSource('change-marker', {
+                    type: 'geojson',
+                    data: {
+                        type: 'Feature',
+                        properties: {},
+                        geometry: coords
+                    }
+                });
+
+                map.addLayer({
+                    id: 'change-marker',
+                    type: 'symbol',
+                    source: 'change-marker',
+                    layout: {
+                        'icon-image': 'current-location-marker',
+                        'icon-size': 0.015
+                    }
+                });
+
+                // Center the map on the marker's new position
+               
+            
+        } else {
+            console.log('Geolocation is not supported by this browser.');
+        }
+    });
+}
+
 
 
 async function getMatch(coordinates, radius, profile) {
@@ -485,50 +585,77 @@ function getDirections(destinationLng, destinationLat) {
         const overview = 'full'; // Level of detail
         const steps = true; // Whether to return step-by-step instructions
         const duration = 'distance'; // Whether to include the estimated duration
-        const radius = [originLat,originLng];
-        getMatch(coordinates, radius, profile);
+
         const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${coordinates}?alternatives=${alternatives}&geometries=${geometries}&language=${language}&overview=${overview}&steps=${steps}&annotations=${duration}&access_token=${accessToken}`;
 
         fetch(directionsUrl)
             .then(response => response.json())
             .then(data => {
-                
-
-                // Display distance, duration, and step-by-step instructions
-                const distance = (data.routes[0].distance / 1000).toFixed(2); // Distance in kilometers
-                const duration = (data.routes[0].duration / 60).toFixed(2); // Duration in minutes
-                const steps = data.routes[0].legs[0].steps.map(step => step.maneuver.instruction);
-                const routeInfoHTML = `
-                <div class = "route">
-            
-                <span class="material-symbols-outlined">
-                directions_car
-                </span>
-                <span>${duration} minutes</span>
+                const routes = data.routes;
                
-                <p>${distance} km</p>
-                </div>
-                <div class = "route-step">
-                <b>Steps</b>
-                <ol style="margin-top: 5px;padding-left: 20px;">
-                ${steps.map(step => `<li style="margin-bottom: 5px;">${step}</li>`).join('')}
-                </ol>
-                </div>
-                `;
-    
-            // Get reference to the div where we want to display route information
-            const routeInfoDiv = document.getElementById('route-info');
-            routeInfoDiv.style.display = 'block';
-    
-            // Update content of the div with route information
-            routeInfoDiv.innerHTML = routeInfoHTML;
+                // Display the first route by default
+                displayRoute(routes[0]);
+
+                // Add click event listeners to toggle buttons
+              
             })
             .catch(error => {
                 console.error("Error fetching directions:", error);
             });
     });
-
 }
+
+
+
+function displayRoute(route) {
+    const distance = (route.distance / 1000).toFixed(2); // Distance in kilometers
+    const duration = (route.duration / 60).toFixed(2); // Duration in minutes
+    const steps = route.legs[0].steps.map(step => step.maneuver.instruction);
+
+    // Create HTML for route information
+    const routeInfoHTML = `
+        <div class="route">
+            <span class="material-symbols-outlined">
+                directions_car
+            </span>
+            <span>${duration} minutes</span>
+            <p>${distance} km</p>
+        </div>
+        <div class="route-step">
+            <b>Steps</b>
+            <ol style="margin-top: 5px; padding-left: 20px;">
+                ${steps.map(step => `<li style="margin-bottom: 5px;">${step}</li>`).join('')}
+            </ol>
+        </div>
+        <button id = "start-travel">Start Traveling</button>
+
+    `;
+ 
+    // Get reference to the div where we want to display route information
+    const routeInfoDiv = document.getElementById('route-info');
+    routeInfoDiv.style.display = 'block';
+
+    // Update content of the div with route information
+    routeInfoDiv.innerHTML = routeInfoHTML;
+
+    // Add the route to the map
+    addRoute(route.geometry);
+    
+    document.getElementById('start-travel').addEventListener('click', function(){
+        if (start == false) {
+        document.getElementById('start-travel').innerText= 'Stop Traveling';
+        startUpdatingMarker(route.geometry);
+        start = true;
+        }
+        else{
+            document.getElementById('start-travel').innerText= 'Start Traveling'
+            stopUpdatingMarker();
+            start = false;
+        }
+    });
+}
+
+
 
 
 function hideRouteInfo() {
@@ -562,7 +689,9 @@ function hideList() {
         routeInfoDiv.style.display = 'none';
         count = 1;
     }
+
     if (map.getSource('route')) {
+        stopUpdatingMarker();
         map.removeLayer('route');
         map.removeSource('route');
     }
@@ -598,7 +727,14 @@ function searchPlace(placeName) {
 
 
 function AskForLocation(){
-
+    var options = document.getElementById("location-options");
+    if (show === false){
+        options.style.display = "block";
+        show = true;
+    } else {
+        options.style.display = "none";
+        show = false; 
+    }
     var routeInfoDiv = document.getElementById('route-info');
         routeInfoDiv.style.display = 'none';
      
@@ -612,9 +748,9 @@ function AskForLocation(){
       searchPlace(placeName);
     }
   }
-  function OtherLocation(place , profession) {
-    const latitude = place.center[1];
-      const longitude = place.center[0];
+  function OtherLocation(place,profession) {
+    latitude = place.center[1];
+    longitude = place.center[0];
       addSpecialMarker(latitude, longitude); 
         // Remove previous markers
         if (currentMarkers !== null) {
@@ -689,47 +825,24 @@ function AskForLocation(){
                 const overview = 'full'; // Level of detail
                 const steps = true; // Whether to return step-by-step instructions
                 const duration = 'distance'; // Whether to include the estimated duration
-                const radius = [originLat,originLng];
-                getMatch(coordinates, radius, profile);
                 const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${coordinates}?alternatives=${alternatives}&geometries=${geometries}&language=${language}&overview=${overview}&steps=${steps}&annotations=${duration}&access_token=${accessToken}`;
         
                 fetch(directionsUrl)
                     .then(response => response.json())
                     .then(data => {
-                        
+                        const routes = data.routes;
+               
+                        // Display the first route by default
+                        displayRoute(routes[0]);
         
-                        // Display distance, duration, and step-by-step instructions
-                        const distance = (data.routes[0].distance / 1000).toFixed(2); // Distance in kilometers
-                        const duration = (data.routes[0].duration / 60).toFixed(2); // Duration in minutes
-                        const steps = data.routes[0].legs[0].steps.map(step => step.maneuver.instruction);
-                        const routeInfoHTML = `
-                        <div class = "route">
-                    
-                        <span class="material-symbols-outlined">
-                        directions_car
-                        </span>
-                        <span>${duration} minutes</span>
-                       
-                        <p>${distance} km</p>
-                        </div>
-                        <div class = "route-step">
-                        <b>Steps</b>
-                        <ol style="margin-top: 5px;padding-left: 20px;">
-                        ${steps.map(step => `<li style="margin-bottom: 5px;">${step}</li>`).join('')}
-                        </ol>
-                        </div>
-                        `;
-            
-                    // Get reference to the div where we want to display route information
-                    const routeInfoDiv = document.getElementById('route-info');
-                    routeInfoDiv.style.display = 'block';
-            
-                    // Update content of the div with route information
-                    routeInfoDiv.innerHTML = routeInfoHTML;
+                        // Add click event listeners to toggle buttons
+                      
                     })
                     .catch(error => {
                         console.error("Error fetching directions:", error);
                     });
+
+                    
         
         }
 let LocationMarker = [];
@@ -756,3 +869,144 @@ let specialMarker;
             }
         }
         
+        var show = false; // Move the variable outside the event listener function
+
+        document.getElementById("anotherLocation").addEventListener("click", function(){
+            var options = document.getElementById("location-options");
+            if (show === false){
+                options.style.display = "block";
+                options.style.top = "2.5cm"
+                options.style.transition = "1s ease-in-out";
+                
+                show = true;
+            } else {
+                options.style.display = "none";
+                options.style.top = "1cm"
+                options.style.transition = "1s ease-in-out";
+                show = false; 
+            }
+        });
+        
+        let marker;
+        let options = document.getElementById("location-options");
+        let dropPinCounter = 0; // Counter to track the number of times DropPin() is called
+        
+        function DroppedPin(){
+            DropPin();
+            resetMarkersLoaded();
+            alert("Please Click on the Map to drop the Marker");
+}
+
+function DropPin() {
+    if (show === false){
+        options.style.display = "block";
+        show = true;
+    } else {
+        options.style.display = "none";
+        show = false; 
+    }
+    map.off('click');
+    map.on('click', handleMapClick);
+    
+    // Reset the dropPinCounter
+    dropPinCounter = 0;
+}
+
+function handleMapClick(e) {
+    if (markersLoaded) return;
+    
+    if (!marker) {
+        marker = new mapboxgl.Marker({ color: '#ffc83d' })
+            
+            .setLngLat(e.lngLat)
+            .addTo(map);
+    } else {
+        marker.setLngLat(e.lngLat);
+    }
+
+    console.log(e.lngLat.lat , e.lngLat.lng);
+
+    // Prompt for profession only if DropPin() is called for the first time
+    if (dropPinCounter === 0) {
+        const profession = prompt('Marker Dropped. Please enter a profession:');
+        var profession_value = document.getElementById('profession');
+        profession_value.value = profession;
+        
+        // Proceed with searching for nearby locations based on the place name and profession
+        if (profession) {
+            OtherDropLocation(e.lngLat.lat , e.lngLat.lng, profession);
+        }
+    }
+    
+    dropPinCounter++; // Increment the counter after the first call
+}
+
+function OtherDropLocation(latitude, longitude,profession) {
+    addSpecialMarker(latitude, longitude); 
+    // Remove previous markers
+    if (currentMarkers !== null) {
+        for (let i = currentMarkers.length - 1; i >= 0; i--) {
+            currentMarkers[i].remove();
+        }
+        // Clear the array
+    }
+    map.flyTo({
+        center: [longitude, latitude],
+        zoom: 16,
+        pitch: 60
+    });
+    // Define the search parameters
+    const params = {
+        q: profession,
+        at: `${latitude},${longitude}`,
+        radius: 1000
+    };
+
+    const geocodingUrl = `https://discover.search.hereapi.com/v1/discover?apikey=${APIKEY}&${new URLSearchParams(params)}`
+    fetch(geocodingUrl)
+        .then(response => response.json())
+        .then(data => {
+            const locations = data.items;
+            const geojsonData = convertToGeoJSON(locations);
+
+            // Add GeoJSON data to the map
+            map.on('load', function () {
+                map.addSource('locations', {
+                    type: 'geojson',
+                    data: geojsonData
+                });
+            });
+
+            // Add markers for each location
+            locations.forEach((location, index) => {
+                var el = document.createElement('div');
+                el.className = 'marker';
+                el.textContent = index + 1;
+
+                const marker = new mapboxgl.Marker({color: "#007afc"})
+                    .setLngLat([location.position.lng, location.position.lat])
+                    .addTo(map)
+                    .setPopup(new mapboxgl.Popup({ offset: [0, -15] })
+                    .setHTML(`
+                    <h3>${location.title}</h3>
+                    <p>${location.address.label}</p>
+                    <br>
+                    <button class='directionButton' data-lng="${location.position.lng}" data-lat="${location.position.lat}" onclick="getOtherLocationDirections(${latitude},${longitude},${location.position.lat}, ${location.position.lng})">Show Direction</button>
+                `));
+
+
+                currentMarkers.push(marker); // Add marker to the array
+            });
+            
+            // Display hospitals list
+            displayLocations(locations);
+            markersLoaded = true;
+        })
+        .catch(error => {
+            console.error("Error: ", error);
+        });
+}
+
+function resetMarkersLoaded() {
+    markersLoaded = false;
+}
