@@ -502,11 +502,18 @@ function updateMarker(route) {
 
         // Get the user's current position
         if (navigator.geolocation) {
-                lat = route.coordinates[0][0];
-                lng = route.coordinates[0][1]; 
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var c_lat = position.coords.latitude;
+                var c_lng = position.coords.longitude;
+
+                lat = route.coordinates[0][0]
+                lng = route.coordinates[0][1] 
+                // Log the coordinates to the console
+                console.log('Current Location Coordinates:', c_lat, c_lng);
+
                 var coords = {
                     type: 'Point',
-                    coordinates: [lat,lng]
+                    coordinates: [lat, lng] // Note: GeoJSON format is [longitude, latitude]
                 };
 
                 // Remove existing marker layer if it exists
@@ -515,6 +522,7 @@ function updateMarker(route) {
                     map.removeSource('change-marker');
                 }
                 map.flyTo({
+                     // Center the map on the user's current location
                     zoom: 16,
                     pitch: 0
                 });
@@ -527,20 +535,18 @@ function updateMarker(route) {
                         geometry: coords
                     }
                 });
-
                 map.addLayer({
                     id: 'change-marker',
                     type: 'symbol',
                     source: 'change-marker',
                     layout: {
                         'icon-image': 'current-location-marker',
-                        'icon-size': 0.015
+                        'icon-size': 0.05
                     }
                 });
-
-                // Center the map on the marker's new position
-               
-            
+            }, function(error) {
+                console.error('Error getting current position:', error);
+            });
         } else {
             console.log('Geolocation is not supported by this browser.');
         }
@@ -587,7 +593,7 @@ function getDirections(destinationLng, destinationLat) {
         const duration = 'distance'; // Whether to include the estimated duration
 
         const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${coordinates}?alternatives=${alternatives}&geometries=${geometries}&language=${language}&overview=${overview}&steps=${steps}&annotations=${duration}&access_token=${accessToken}`;
-
+        console.log(directionsUrl)
         fetch(directionsUrl)
             .then(response => response.json())
             .then(data => {

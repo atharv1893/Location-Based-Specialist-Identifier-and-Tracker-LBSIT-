@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
       window.scrollBy(0, 750);
     });
 
-   const locations = ["Thane", "Nerul", "Byculla","Dombivali"]; 
+   const locations = ["Thane", "Nerul", "Byculla","Dombivli"]; 
    let wordIndex = 0;
    let charIndex = 0;
    var typingEffect = document.getElementById("typing-effect");
-    typingEffect.innerHTML = "Atharv"
+    typingEffect.innerHTML = ""
     console.log(typingEffect)
    function type() {
      if (charIndex < locations[wordIndex].length) {
