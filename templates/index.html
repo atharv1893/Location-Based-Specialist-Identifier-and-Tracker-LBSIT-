@@ -10,8 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;1,200&family=Jost:ital,wght@0,100;1,100&family=Varela&family=Yeseva+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poltawski+Nowy:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;500&family=Tiro+Tamil:ital@0;1&display=swap" rel="stylesheet">
 <link rel="shortcut icon" href="{{ url_for('static', filename='image/favicon.ico') }}"sizes="16x16 32x32">
-
 <title>ResQ</title>
        
 
@@ -64,6 +64,41 @@
              <li>Cyber Police - 1930</li>
 
           </div> 
+            <div class="feedback" id = "feedback">
+                <img src = "{{url_for('static', filename = 'image/customer-review.png')}}" alt = "feedback">
+            </div>
+            <div class="feedback-container" id = "feedback_container">
+                <img id="f-c_logo" src = "{{ url_for('static',filename='image/elixr_white_logo.png') }}" alt="logo"> 
+                <div class="user-name">
+                    {% if latest_firstname %}
+                     <p>Hello!</p>
+                    <h4>How can we help?</h4>
+                {% else %}
+                    <p>No firstname found</p>
+                {% endif %} 
+                </div>
+               <div class="feedback-inner-container">
+
+                   <form action="/" method="post" enctype="multipart/form-data">
+                       <div class="form-group email">
+                           <label for="email">Email:</label>
+                           <input type="email" id="email" name="email" required>
+                        </div>
+                    <div class="form-group title">
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group description">
+                        <label for="description"> Description:</label>
+                        <textarea id="description" name="description" rows="4" required></textarea>
+                    </div>
+                   
+                    <div class="submit">
+                        <button id = "f-button">Create an Issue</button>
+                    </div>
+                </form>
+            </div> 
+            </div>
           <script src="{{ url_for('static', filename='script/script.js') }}"></script>  
     </body>
    

@@ -222,6 +222,7 @@ width:100%;
     .submit{
     
       text-align: center;
+      cursor: pointer;
     }
     .btn-submit{
       width:6cm;
@@ -265,3 +266,4 @@ width:100%;
         text-decoration:underline;
       
       }
+      

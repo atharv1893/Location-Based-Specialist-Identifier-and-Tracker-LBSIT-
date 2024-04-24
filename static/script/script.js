@@ -1,5 +1,5 @@
 var popup = false
-
+var f_b_popup = false
 function precision() {
   var rule1 = document.getElementById("rule1");
   var precision = document.getElementById("precision");
@@ -68,4 +68,18 @@ emergency.addEventListener("click", function(){
         contacts.style.display = "block";
         popup = true;
     }
+});
+var f_b_popup = false
+var feedback = document.getElementById("feedback");
+var feedback_container =  document.getElementById("feedback_container");
+
+feedback.addEventListener("click", function(){ 
+  if(f_b_popup != false){
+    feedback_container.style.display = "none";
+      f_b_popup = false; 
+  }
+  else{
+    feedback_container.style.display = "block";
+      f_b_popup = true;
+  }
 });
