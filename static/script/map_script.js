@@ -507,13 +507,15 @@ function updateMarker(route) {
                 var c_lng = position.coords.longitude;
 
                 lat = route.coordinates[0][0]
-                lng = route.coordinates[0][1] 
+                lng = route.coordinates[0][1]
+                
+                console.log(lat,lng)
                 // Log the coordinates to the console
                 console.log('Current Location Coordinates:', c_lat, c_lng);
 
                 var coords = {
                     type: 'Point',
-                    coordinates: [lat, lng] // Note: GeoJSON format is [longitude, latitude]
+                    coordinates: [lat,lng] // Note: GeoJSON format is [longitude, latitude]
                 };
 
                 // Remove existing marker layer if it exists
@@ -522,7 +524,6 @@ function updateMarker(route) {
                     map.removeSource('change-marker');
                 }
                 map.flyTo({
-                     // Center the map on the user's current location
                     zoom: 16,
                     pitch: 0
                 });

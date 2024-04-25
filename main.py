@@ -50,8 +50,7 @@ def home():
         MAIL_USERNAME = 'resqhealth@outlook.com'
         TO_EMAIL = email 
         subject = f"{title}"
-        message_body = f"""
-Subject: {subject}
+        message_body = f"""Subject: {subject}
 Hello, User
 
 Thank you for your feedback. Below are the details of your submission:
